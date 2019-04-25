@@ -49,6 +49,7 @@ data "azurerm_key_vault_secret" "postgres_password" {
   vault_uri = "${data.azurerm_key_vault.rd_key_vault.vault_uri}"
 }
 
+
 module "db-professional-ref-data" {
   source = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product = "${var.product}-${var.component}-postgres-db"
@@ -57,6 +58,8 @@ module "db-professional-ref-data" {
   postgresql_user = "${var.postgresql_user}"
   database_name = "${var.database_name}"
   common_tags = "${var.common_tags}"
+
+
 }
 
 module "rd_professional_api" {
@@ -70,7 +73,7 @@ module "rd_professional_api" {
   capacity = "${var.capacity}"
   instance_size = "${var.instance_size}"
   common_tags = "${merge(var.common_tags, map("lastUpdated", "${timestamp()}"))}"
-  appinsights_instrumentation_key = "${azurerm_application_insights.app_insights.instrumentation_key}"
+  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
   asp_name = "${local.app_service_plan}"
   asp_rg = "${local.app_service_plan}"
 
@@ -95,11 +98,4 @@ module "rd_professional_api" {
     LOG_LEVEL_RD = "${var.log_level_rd}"
     EXCEPTION_LENGTH = 100
   }
-}
-
-resource "azurerm_application_insights" "app_insights" {
-  name                = "${azurerm_resource_group.rg.name}-appinsights"
-  location            = "UK South"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  application_type    = "Java"
 }
