@@ -45,10 +45,6 @@ variable "database_name" {
   default = "dbrefdata"
 }
 
-variable "appinsights_instrumentation_key" {
-  default = ""
-}
-
 variable "root_logging_level" {
   default = "INFO"
 }
